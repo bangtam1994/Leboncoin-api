@@ -4,8 +4,8 @@ const Offer = mongoose.model("Offer", {
   title: String,
   description: String,
   price: Number,
-  creator: String,
-  created: String
+  created: Date,
+  creator: Object
 });
 
 module.exports = Offer;

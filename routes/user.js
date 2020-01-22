@@ -18,7 +18,7 @@ router.post("/user/sign_up", async (req, res) => {
     if (alreadyExist) {
       res.json({ message: "email already exist" });
     } else {
-      if (req.fields.username) {
+      if (req.fields.username && req.fields.email && req.fields.phone) {
         const newUser = new User({
           email: req.fields.email,
           account: {
@@ -37,7 +37,7 @@ router.post("/user/sign_up", async (req, res) => {
           account: newUser.account
         });
       } else {
-        res.json({ message: "Please give a username" });
+        res.json({ message: "Missing information" });
       }
     }
   } catch (error) {
