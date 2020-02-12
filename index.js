@@ -3,8 +3,9 @@ const formidableMiddleware = require("express-formidable");
 const app = express();
 const mongoose = require("mongoose");
 app.use(formidableMiddleware());
+require("dotenv").config();
 
-mongoose.connect("mongodb://localhost/leboncoin", {
+mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true
@@ -19,6 +20,6 @@ app.all("*", (req, res) => {
   res.json({ message: "all routes" });
 });
 
-app.listen(3000, () => {
+app.listen(process.env.PORT, () => {
   console.log("Server Started");
 });
