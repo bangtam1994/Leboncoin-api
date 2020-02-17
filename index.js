@@ -2,9 +2,11 @@ const express = require("express");
 const formidableMiddleware = require("express-formidable");
 const app = express();
 const mongoose = require("mongoose");
-app.use(formidableMiddleware());
-require("dotenv").config();
+const cors = require("cors");
 
+app.use(formidableMiddleware());
+app.use(cors());
+require("dotenv").config();
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
