@@ -4,18 +4,59 @@ const router = express.Router();
 const Offer = require("../models/Offer");
 const User = require("../models/User");
 const isAuthenticated = require("../middleware/isAuthenticated");
-
+const cloudinary = require("cloudinary");
+cloudinary.config({
+  cloud_name: "btngn",
+  api_key: "385331586897339",
+  api_secret: "h179p9nFdJzq_-FNzMP0Jk0yRmE"
+});
 // Create an offer
 // Need to create a middleWare -->  isAuthenticated
 
 router.post("/offer/publish", isAuthenticated, async (req, res) => {
   try {
+    const files = Object.keys(req.files);
+    //Si j'ai des fichiers ?
+
+    // function upload(file, options, callback)
+    // Exemple : cloudinary.v2.uploader.upload("/home/my_image.jpg",
+    //function(error, result) {console.log(result, error)});
+    if (files.length) {
+      const results = {};
+      //On parcourt chacun des fichiers
+      files.forEach(fileKey => {
+        cloudinary.v2.uploader.upload(
+          req.files[fileKey].path,
+          {
+            folder: "leboncoin-images"
+          },
+          (error, result) => {
+            // on enregistre le résultat dans un objet
+            if (error) {
+              results[fileKey] = {
+                success: false,
+                error: error
+              };
+            } else {
+              results[fileKey] = {
+                success: true,
+                result: result
+              };
+            }
+          }
+        );
+      });
+    } else {
+      res.send("No file uploaded");
+    }
+
     const newOffer = new Offer({
       title: req.fields.title,
       description: req.fields.description,
       price: req.fields.price,
       created: new Date(),
-      creator: req.user
+      creator: req.user,
+      files: results
     });
     await newOffer.save();
     res.json({
@@ -24,6 +65,7 @@ router.post("/offer/publish", isAuthenticated, async (req, res) => {
       description: newOffer.description,
       price: newOffer.price,
       created: newOffer.created,
+      files: newOffer.files,
       creator: {
         account: {
           username: newOffer.creator.account.username,
