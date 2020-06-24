@@ -9,7 +9,7 @@ const Offer = mongoose.model("Offer", {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
   },
-  files: [String]
+  pictures: { type: Array }
 });
 
 module.exports = Offer;

@@ -7,8 +7,9 @@ const User = mongoose.model("User", {
   salt: String,
   account: {
     username: { type: String, required: true },
-    phone: { type: String }
-  }
+    phone: { type: String },
+    birthdate: { type: Date },
+  },
 });
 
 module.exports = User;
